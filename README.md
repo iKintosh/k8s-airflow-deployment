@@ -1,4 +1,4 @@
-# xccelerated-airflow-k8s
+# airflow-k8s
 
 - Make a deployment for the Airflow Webserver, Use the `apache/airflow:2.1.4` image
 - Expose the webserver to network traffic from outside of the cluster
