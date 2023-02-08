@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-webservice
+  labels:
+    app: airflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow
+  template:
+    metadata:
+      labels:
+        app: airflow
+    spec:
+      containers:
+        - name: airflow
+          image: apache/airflow:2.1.4
+          args:
+            - webserver
+          envFrom:
+            - configMapRef:
+                name: airflow-cfg
+          ports:
+            - name: air-webservice
+              containerPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-scheduler
+  labels:
+    app: airflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow
+  template:
+    metadata:
+      labels:
+        app: airflow
+    spec:
+      containers:
+        - name: airflow
+          image: apache/airflow:2.1.4
+          args:
+            - scheduler
+          envFrom:
+            - configMapRef:
+                name: airflow-cfg
+          ports:
+            - name: air-webservice
+              containerPort: 8080
+
+
+
+
+
+
+
