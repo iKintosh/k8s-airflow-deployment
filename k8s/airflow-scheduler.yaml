@@ -8,18 +8,18 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: airflow
+      app: airflow-scheduler
   template:
     metadata:
       labels:
-        app: airflow
+        app: airflow-scheduler
     spec:
       volumes:
         - name: dags
           emptyDir: { }
       containers:
         - name: airflow
-          image: apache/airflow:2.1.4
+          image: apache/airflow:2.2.3
           args:
             - scheduler
           volumeMounts:
@@ -30,15 +30,12 @@ spec:
                 name: airflow-cfg
             - secretRef:
                 name: airflow-secret
-          ports:
-            - name: air-webservice
-              containerPort: 8080
         - name: dagfetcher
           image: bitnami/git:2.39.1-debian-11-r8
           command:
             - sh
             - -c
-            - "while true; do rm -fv /dags/* && git clone https://github.com/iKintosh/airflow-dags.git && sleep 60; done"
+            - "while true; do git clone https://github.com/iKintosh/airflow-dags.git /dags/ && cd dags/ && git pull -f && cd ..  && sleep 60; done"
           volumeMounts:
             - name: dags
               mountPath: /dags

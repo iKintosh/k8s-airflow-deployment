@@ -1,5 +1,7 @@
 # airflow-k8s
 
+## USE CREDENTIALS FROM .env-example AT YOUR OWN RISK
+
 - Make a deployment for the Airflow Webserver, Use the `apache/airflow:2.1.4` image
 - Expose the webserver to network traffic from outside of the cluster
 - Make a pod running Postgres

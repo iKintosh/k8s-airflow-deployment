@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: airflow-scheduler
+  name: airflow-worker
   labels:
     app: airflow
 spec:
@@ -23,7 +23,7 @@ spec:
           command:
             - sh
             - -c
-            - "while true; do rm -fv /dags/* && git clone https://github.com/iKintosh/airflow-dags.git && sleep 60; done"
+            - "while true; do git clone https://github.com/iKintosh/airflow-dags.git /dags/ && cd dags/ && git pull -f && cd ..  && sleep 60; done"
           volumeMounts:
             - name: dags
               mountPath: /dags
@@ -33,9 +33,15 @@ spec:
             - airflow
             - celery
             - worker
+          ports:
+            - name: air-worker
+              containerPort: 8793
           volumeMounts:
             - name: dags
               mountPath: /opt/airflow/dags
+          env:
+            - name: "AIRFLOW__CORE__HOSTNAME_CALLABLE"
+              value: 'airflow.utils.net:get_host_ip_address'
           envFrom:
             - configMapRef:
                 name: airflow-cfg

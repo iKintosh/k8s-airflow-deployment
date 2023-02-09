@@ -11,10 +11,9 @@ spec:
       spec:
         resources:
           requests:
-            storage: 10Gi
+            storage: 5Gi
         accessModes:
           - ReadWriteOnce
-        storageClassName: standard
   serviceName: metadata-db
   selector:
     matchLabels:
@@ -47,11 +46,6 @@ spec:
           ports:
             - containerPort: 5432
               name: db
-          readinessProbe:
-            exec:
-              command: [ "psql", "-U", "airflow", "-d", "airflow", "-c", "SELECT 1" ]
-            initialDelaySeconds: 15
-            timeoutSeconds: 2
           env:
             - name: POSTGRES_USER
               value: airflow

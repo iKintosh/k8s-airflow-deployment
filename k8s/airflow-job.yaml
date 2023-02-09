@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: airflow-init
-          image: apache/airflow:2.1.4
+          image: apache/airflow:2.2.3
           args:
             - "db"
             - "init"
@@ -23,13 +23,13 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: airflow-create-user
+  name: airflow-init-user
 spec:
   template:
     spec:
       containers:
-        - name: airflow-create
-          image: apache/airflow:2.1.4
+        - name: airflow-init
+          image: apache/airflow:2.2.3
           args: [ "users", "create", "-e", "airflow@airflow.com", "-f", "airflow", "-l", "airflow", "-p", "$(AIRFLOW_ADMIN_PASS)",
                   "-r", "Admin", "-u", "$(AIRFLOW_ADMIN_NAME)" ]
           envFrom:

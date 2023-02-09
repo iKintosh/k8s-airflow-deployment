@@ -8,5 +8,4 @@ spec:
     app: metadata-db
   ports:
     - name: db
-      targetPort: postgres-http
       port: 5432

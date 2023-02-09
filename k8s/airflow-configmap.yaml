@@ -6,4 +6,5 @@ data:
   AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
   AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
   AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
-  AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+  AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+  AIRFLOW__CELERY__BROKER_URL: redis://:@celery-backend:6379/0
