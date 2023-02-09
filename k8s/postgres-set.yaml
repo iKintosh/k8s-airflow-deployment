@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: metadata-db
+  labels:
+    app: metadata-db
+spec:
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        resources:
+          requests:
+            storage: 10Gi
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard
+  serviceName: metadata-db
+  selector:
+    matchLabels:
+      app: metadata-db
+  template:
+    metadata:
+      labels:
+        app: metadata-db
+    spec:
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-data
+      initContainers:
+        - name: chmoder
+          image: busybox
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /pgdata
+          command:
+            - chown
+            - 999:999
+            - /pgdata
+      containers:
+        - name: postgres
+          image: postgres:13.4
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          ports:
+            - containerPort: 5432
+              name: db
+          readinessProbe:
+            exec:
+              command: [ "psql", "-U", "airflow", "-d", "airflow", "-c", "SELECT 1" ]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          env:
+            - name: POSTGRES_USER
+              value: airflow
+            - name: POSTGRES_DB
+              value: airflow
+          envFrom:
+            - secretRef:
+                name: airflow-secret

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: celery-backend
+  labels:
+    app: celery-backend
+spec:
+  serviceName: celery-backend
+  template:
+    metadata:
+      labels:
+        app: celery-backend
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.0
+          ports:
+            - containerPort: 6379
+              name: db
+  selector:
+    matchLabels:
+      app: celery-backend
