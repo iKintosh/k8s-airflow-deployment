@@ -17,3 +17,12 @@
     - Celery
     - Redis
     - Configure Airflow
+
+```shell
+kubectl create secret generic airflow-secret --from-env-file=.env
+kubectl apply -f k8s/
+```
+
+```shell
+ curl https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Rick_Astley/daily/20230101/20230102
+```
