@@ -29,9 +29,9 @@
 
 ### Retraining
 
-One way to impelement the retraining is to create Images with BentoML service and redeploy them as the final step of the retraining process. Probably I would have to use Blue-Green Deployment strategy (implemented in Argo Rollouts).
+One way (and more production-like) is to impelement airflow retraining pipeline where the final step is to create Images with BentoML service inside and redeploy them. Probably I would have to use Blue-Green Deployment strategy (implemented in Argo Rollouts).
 
-Another and easier way is to create custom FastAPI service to serve and train the model, train method will use all availiable data and upload model file to MLFlow artifact storage. Model roll out would also be done via MLFlow artifact storage, sidecar process will update model from time to time.
+Another way is to create custom FastAPI service to serve and train the model, train method will use all availiable data and upload model file to MLFlow artifact storage. Model roll out would also be done via MLFlow artifact storage, sidecar process will update model from time to time.
 
 - Create (re-)train pipeline in Airflow
     - Connect MLFlow to minio and to postgres
