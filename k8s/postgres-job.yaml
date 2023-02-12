@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-init-db-mlflow
+spec:
+  template:
+    spec:
+      containers:
+        - name: postgres-init-db
+          image: postgres:11-alpine # A relatively small official image that can run psql
+          command:
+            - sh
+            - -c
+            - >
+                while ! pg_isready -U airflow -h metadata-db -p 5432; do sleep 1; done;
+                echo "RUNNING" | PGPASSWORD=$(POSTGRES_PASSWORD) psql -U airflow -h metadata-db -p 5432 -c "CREATE DATABASE mlflow;" --set ON_ERROR_STOP=1
+          env:
+            - name: POSTGRES_USER
+              value: airflow
+            - name: POSTGRES_DB
+              value: airflow
+          envFrom:
+            - secretRef:
+                name: airflow-secret
+      restartPolicy: OnFailure
+  backoffLimit: 5
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-init-db-wiki
+spec:
+  template:
+    spec:
+      containers:
+        - name: postgres-init-db
+          image: postgres:11-alpine # A relatively small official image that can run psql
+          command:
+            - sh
+            - -c
+            - >
+                while ! pg_isready -U airflow -h metadata-db -p 5432; do sleep 1; done;
+                echo "RUNNING" | PGPASSWORD=$(POSTGRES_PASSWORD) psql -U airflow -h metadata-db -p 5432 -c "CREATE DATABASE wiki;" --set ON_ERROR_STOP=1
+          env:
+            - name: POSTGRES_USER
+              value: airflow
+            - name: POSTGRES_DB
+              value: airflow
+          envFrom:
+            - secretRef:
+                name: airflow-secret
+      restartPolicy: OnFailure
+  backoffLimit: 5
