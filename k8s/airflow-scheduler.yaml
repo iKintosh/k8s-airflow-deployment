@@ -31,11 +31,20 @@ spec:
             - secretRef:
                 name: airflow-secret
         - name: dagfetcher
-          image: bitnami/git:2.39.1-debian-11-r8
-          command:
-            - sh
-            - -c
-            - "while true; do git clone https://github.com/iKintosh/airflow-dags.git /dags/ && cd dags/ && git pull -f && cd ..  && sleep 60; done"
+          image: openweb/git-sync
+          env:
+          - name: GIT_SYNC_REPO
+            value: https://github.com/iKintosh/airflow-dags.git
+          - name: GIT_SYNC_BRANCH
+            value: master
+          - name: GIT_SYNC_REV
+            value: "FETCH_HEAD"
+          - name: GIT_SYNC_DEST
+            value: /dags
+          - name: GIT_SYNC_WAIT
+            value: "30"
+          - name: GIT_SYNC_ONE_TIME
+            value: "false"
           volumeMounts:
             - name: dags
               mountPath: /dags
