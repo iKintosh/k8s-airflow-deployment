@@ -2,6 +2,8 @@
 
 ## USE CREDENTIALS FROM .env-example AT YOUR OWN RISK
 
+Dags are stored in [GitHub Repo](https://github.com/iKintosh/airflow-dags)
+
 ### DONE
 - Make a deployment for the Airflow Webserver.
 - Expose the webserver to network traffic from outside of the cluster.
